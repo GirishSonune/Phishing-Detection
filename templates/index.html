@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phishing URL Detector</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+      input[type=text] { width: 100%; padding: 0.5rem; font-size: 1rem; }
+      button { padding: 0.6rem 1rem; margin-top: 0.5rem; }
+      .result { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+      .malicious { background: #ffe6e6; border: 1px solid #ffb3b3; }
+      .legit { background: #e6ffea; border: 1px solid #b3ffcc; }
+      .error { background: #fff0e6; border: 1px solid #ffd9b3; }
+      footer { margin-top: 2rem; font-size: 0.9rem; color: #555; }
+    </style>
+  </head>
+  <body>
+    <h1>Phishing URL Detector</h1>
+    <p>Enter a URL and the model will predict whether it's likely phishing.</p>
+
+    {% if error %}
+      <div class="result error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+      <label for="url">URL</label>
+      <input name="url" id="url" type="text" placeholder="https://example.com/login" required />
+      <br />
+      <button type="submit">Check URL</button>
+    </form>
+
+    {% if result %}
+      <div class="result {{ 'malicious' if result.label == 'malicious' else 'legit' }}">
+        <strong>Prediction:</strong> {{ result.label|capitalize }}<br />
+        {% if result.probability is not none %}
+          <strong>Probability (malicious):</strong> {{ '%.2f'|format(result.probability) }}
+        {% endif %}
+        <div style="margin-top:0.5rem; font-size:0.9rem; color:#333">URL: {{ details.url }}</div>
+      </div>
+    {% endif %}
+
+    <footer>
+      <div>Model file: {{ model_path or 'not found' }}</div>
+      <div>Place your pickled model and optionally `feature_names.pkl` and `scaler.pkl` in this folder.</div>
+    </footer>
+  </body>
+ </html>
