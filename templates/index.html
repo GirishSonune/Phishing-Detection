@@ -1,48 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8">
     <title>Phishing URL Detector</title>
-    <style>
-      body { font-family: Arial, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
-      input[type=text] { width: 100%; padding: 0.5rem; font-size: 1rem; }
-      button { padding: 0.6rem 1rem; margin-top: 0.5rem; }
-      .result { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
-      .malicious { background: #ffe6e6; border: 1px solid #ffb3b3; }
-      .legit { background: #e6ffea; border: 1px solid #b3ffcc; }
-      .error { background: #fff0e6; border: 1px solid #ffd9b3; }
-      footer { margin-top: 2rem; font-size: 0.9rem; color: #555; }
-    </style>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   </head>
-  <body>
-    <h1>Phishing URL Detector</h1>
-    <p>Enter a URL and the model will predict whether it's likely phishing.</p>
-
-    {% if error %}
-      <div class="result error">{{ error }}</div>
-    {% endif %}
-
-    <form method="post">
-      <label for="url">URL</label>
-      <input name="url" id="url" type="text" placeholder="https://example.com/login" required />
-      <br />
-      <button type="submit">Check URL</button>
-    </form>
-
-    {% if result %}
-      <div class="result {{ 'malicious' if result.label == 'malicious' else 'legit' }}">
-        <strong>Prediction:</strong> {{ result.label|capitalize }}<br />
-        {% if result.probability is not none %}
-          <strong>Probability (malicious):</strong> {{ '%.2f'|format(result.probability) }}
-        {% endif %}
-        <div style="margin-top:0.5rem; font-size:0.9rem; color:#333">URL: {{ details.url }}</div>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+      <h2 class="text-2xl font-bold text-center mb-6">Phishing URL Detector</h2>
+      <form method="POST" class="space-y-4">
+        <input type="text" name="url" value="{{ url }}" placeholder="Enter a URL to check" required
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none">
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Check</button>
+      </form>
+      {% if prediction %}
+      <div class="mt-6 text-center">
+        <p class="text-lg font-semibold">{{ prediction }}</p>
       </div>
-    {% endif %}
-
-    <footer>
-      <div>Model file: {{ model_path or 'not found' }}</div>
-      <div>Place your pickled model and optionally `feature_names.pkl` and `scaler.pkl` in this folder.</div>
-    </footer>
+      {% endif %}
+    </div>
   </body>
- </html>
+</html>
